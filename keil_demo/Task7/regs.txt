@@ -1,0 +1,75 @@
+printf("R5=%d R6=%d R7=%d R8=%d SP=0x%X LR=0x%X PC=0x%X\n", _R5, _R6, _R7, _R8, _SP, _LR, _PC)
+__________________________________________________________________________________________^
+*** error 34: undefined identifier
+Event Recorder log file: <none>
+       command log file: regs.txt
+        serial log file: <none>
+       Itm/Rta log file: <none>
+LOG > regs2.txt
+*** error 63: logfile already active
+0x00000001
+_R5
+^
+*** error 34: undefined identifier
+SYS
+^
+*** error 34: undefined identifier
+Event Recorder log file: <none>
+       command log file: regs.txt
+        serial log file: <none>
+       Itm/Rta log file: <none>
+LOG > regs3.txt
+*** error 63: logfile already active
+0x00000002
+_R5
+^
+*** error 34: undefined identifier
+_R6
+^
+*** error 34: undefined identifier
+_R7
+^
+*** error 34: undefined identifier
+_R8
+^
+*** error 34: undefined identifier
+_SP
+^
+*** error 34: undefined identifier
+_LR
+^
+*** error 34: undefined identifier
+_PC
+^
+*** error 34: undefined identifier
+Event Recorder log file: <none>
+       command log file: regs.txt
+        serial log file: <none>
+       Itm/Rta log file: <none>
+LOG > C:\Users\17129\Documents\Trae-CN\temp_20261016_01\keil_demo\Task7\out.txt
+*** error 63: logfile already active
+_R5
+^
+*** error 34: undefined identifier
+_R6
+^
+*** error 34: undefined identifier
+_R7
+^
+*** error 34: undefined identifier
+_R8
+^
+*** error 34: undefined identifier
+_SP
+^
+*** error 34: undefined identifier
+_LR
+^
+*** error 34: undefined identifier
+_PC
+^
+*** error 34: undefined identifier
+Event Recorder log file: <none>
+       command log file: regs.txt
+        serial log file: <none>
+       Itm/Rta log file: <none>

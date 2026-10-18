@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 7 &amp; Task 8 解析</title>
+<style>
+  :root{--bg:#f5f7fa;--card:#fff;--ink:#1f2430;--muted:#6b7280;--line:#e5e8ee;
+        --accent:#0b63c5;--accent-soft:#eaf2fd;--key:#b23a48;--key-soft:#fdeef0;
+        --ok:#0f7b52;--ok-soft:#e8f6ef;--code-bg:#0f172a;--code-ink:#e6edf3}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.78;font-size:15px;
+       font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",Roboto,Arial,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto;padding:32px 20px 80px}
+  header.hero{background:linear-gradient(135deg,#0b63c5,#0a3f86);color:#fff;border-radius:16px;
+       padding:32px 34px 26px;margin-bottom:24px;box-shadow:0 10px 30px rgba(11,99,197,.18)}
+  header.hero h1{margin:0 0 6px;font-size:26px}
+  header.hero .sub{opacity:.92;font-size:15px}
+  header.hero .meta{margin-top:12px;font-size:13px;opacity:.86;line-height:1.9}
+  h2.sec{font-size:21px;margin:36px 0 14px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:17px;margin:22px 0 8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;
+        margin:0 0 20px;box-shadow:0 2px 10px rgba(31,36,48,.04)}
+  .req{background:var(--accent-soft);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:14.5px}
+  .req b{color:var(--accent)}
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:16px 18px;overflow-x:auto;
+      font-family:"Cascadia Mono","Consolas","SFMono-Regular",Menlo,monospace;font-size:13px;line-height:1.65;margin:12px 0}
+  pre .c{color:#7d8ea3}
+  code.inl{background:#eef1f6;border:1px solid var(--line);border-radius:5px;padding:1px 6px;
+      font-family:"Cascadia Mono","Consolas",monospace;font-size:12.7px}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#f0f3f8;font-weight:600}
+  tbody tr:nth-child(even){background:#fafbfd}
+  td.mono,th.mono{font-family:"Cascadia Mono","Consolas",monospace;font-size:13px}
+  .ans{background:var(--ok-soft);border-left:4px solid var(--ok);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .ans h4{margin:0 0 6px;font-size:14.5px;color:var(--ok)}
+  .warn{background:var(--key-soft);border-left:4px solid var(--key);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .warn h4{margin:0 0 6px;font-size:14.5px;color:var(--key)}
+  ul.tight{margin:6px 0 0 18px;padding:0}
+  ul.tight li{margin:3px 0}
+  .tip{color:var(--muted);font-size:13.5px;margin-top:8px}
+  figure{margin:16px 0;text-align:center}
+  figure img{max-width:100%;border:1px solid var(--line);border-radius:10px;box-shadow:0 3px 14px rgba(31,36,48,.10)}
+  figcaption{font-size:12.8px;color:var(--muted);margin-top:7px}
+  .kv{font-family:"Cascadia Mono","Consolas",monospace}
+  footer{margin-top:40px;color:var(--muted);font-size:12.5px;text-align:center;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>Task 7 &amp; Task 8 解析</h1>
+  <div class="sub">PUSH / POP　·　PC / SP / LR　——　含 Keil 实测证据</div>
+  <div class="meta">
+    课件：<b>Block1.5-CodingDay_v2.pptx</b>　｜　平台：<b>Keil MDK 5.36 + ARM Cortex-M4 模拟器</b><br>
+    本文所有数值均在 Keil 里<b>实机跑出来</b>（截图见下），不是纸上推导。
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<h2 class="sec">一、Task 7：PUSH / POP</h2>
+<div class="card">
+  <div class="req"><b>题目：</b>准备好代码，在 Debug 模式下运行。<b>调查 Code 2 是否与 Code 1 行为相同？</b>若不同，Code 2 应怎样改才能得到与 Code 1 相同的行为？</div>
+
+<pre><span class="c">; Code 1</span>
+        MOV     r1,#1
+        MOV     r2,#2
+        MOV     r3,#3
+        MOV     r4,#4
+        PUSH    {r1,r4,r3,r2}
+        POP     {r5-r7,r8}
+
+<span class="c">; Code 2</span>
+        MOV     r1,#1
+        MOV     r2,#2
+        MOV     r3,#3
+        MOV     r4,#4
+        PUSH    {r1}
+        PUSH    {r2}
+        PUSH    {r3}
+        PUSH    {r4}
+        POP     {r5}
+        POP     {r6}
+        POP     {r7}
+        POP     {r8}</pre>
+
+  <h3>1.1　必备知识</h3>
+  <ul class="tight">
+    <li><b>栈向低地址增长</b>：<code class="inl">PUSH</code> 先 <code class="inl">SP = SP − 4</code> 再写；<code class="inl">POP</code> 先读再 <code class="inl">SP = SP + 4</code>。SP 永远指向"栈顶那个已入栈的值"。</li>
+    <li><b>寄存器列表按编号升序压栈</b>：ARM 规定，<code class="inl">PUSH {r1,r4,r3,r2}</code> 里<b>书写顺序无意义</b>，汇编器会按 <b>r1→r2→r3→r4</b> 压栈，<b>编号小的在低地址</b>。</li>
+    <li><b>编码限制</b>：16 位 <code class="inl">PUSH/POP</code> 只能装 r0–r7（PUSH 还可带 LR、POP 还可带 PC）；一旦出现 <b>r8</b> 及以上，必须用 32 位（Thumb-2）编码。</li>
+  </ul>
+
+  <h3>1.2　Code 1 逐步追踪　（设 SP 初值 = 0x20008000）</h3>
+  <table>
+    <thead><tr><th class="mono">步骤</th><th class="mono">SP</th><th class="mono">栈内存（低→高）</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">初值</td><td class="mono">0x20008000</td><td class="mono">—</td><td>栈空</td></tr>
+      <tr><td class="mono">PUSH {r1,r4,r3,r2}</td><td class="mono">0x20007FF0</td><td class="mono">FF0=1(r1)　FF4=2(r2)　FF8=3(r3)　FFC=4(r4)</td><td>4 个寄存器 → SP−16；按升序压栈</td></tr>
+      <tr><td class="mono">POP {r5-r7,r8}</td><td class="mono">0x20008000</td><td class="mono">（读回，栈恢复空）</td><td>按升序出栈：r5=1、r6=2、r7=3、r8=4</td></tr>
+    </tbody>
+  </table>
+  <div class="ans"><h4>Code 1 结果</h4>
+    <ul><li><b>r5=1　r6=2　r7=3　r8=4</b>；SP 回到 0x20008000（压栈/出栈配平）。</li></ul>
+  </div>
+
+  <h3>1.3　Code 2 逐步追踪</h3>
+  <table>
+    <thead><tr><th class="mono">步骤</th><th class="mono">SP</th><th class="mono">栈内存（低→高）</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">PUSH {r1}</td><td class="mono">0x20007FFC</td><td class="mono">FFC=1</td></tr>
+      <tr><td class="mono">PUSH {r2}</td><td class="mono">0x20007FF8</td><td class="mono">FF8=2　FFC=1</td></tr>
+      <tr><td class="mono">PUSH {r3}</td><td class="mono">0x20007FF4</td><td class="mono">FF4=3　FF8=2　FFC=1</td></tr>
+      <tr><td class="mono">PUSH {r4}</td><td class="mono">0x20007FF0</td><td class="mono">FF0=<b>4</b>　FF4=<b>3</b>　FF8=<b>2</b>　FFC=<b>1</b></td></tr>
+      <tr><td class="mono">POP {r5}</td><td class="mono">0x20007FF4</td><td class="mono">r5 = 4</td></tr>
+      <tr><td class="mono">POP {r6}</td><td class="mono">0x20007FF8</td><td class="mono">r6 = 3</td></tr>
+      <tr><td class="mono">POP {r7}</td><td class="mono">0x20007FFC</td><td class="mono">r7 = 2</td></tr>
+      <tr><td class="mono">POP {r8}</td><td class="mono">0x20008000</td><td class="mono">r8 = 1</td></tr>
+    </tbody>
+  </table>
+  <div class="ans"><h4>答案</h4>
+    <ul>
+      <li><b>不相同。</b>Code 2 得到 <b>r5=4　r6=3　r7=2　r8=1</b>（被倒置了）。</li>
+      <li><b>原因：</b>栈是"后进先出"。Code 1 里汇编器把 4 个寄存器按 <b>r1,r2,r3,r4</b> 升序压栈（r1 在栈顶，最后弹出）；Code 2 逐个压栈，<b>最后压入的 r4 反而在栈顶</b>，所以第一个 <code class="inl">POP {r5}</code> 就把 4 弹给了 r5。</li>
+      <li><b>修正 Code 2（与 Code 1 等价）：把压栈顺序反转</b>，弹出顺序不变：<br>
+        <code class="inl">PUSH {r4} → PUSH {r3} → PUSH {r2} → PUSH {r1} → POP {r5} → POP {r6} → POP {r7} → POP {r8}</code><br>
+        即得 r5=1、r6=2、r7=3、r8=4。<br><span class="tip">（等价做法：压栈顺序不动，改成逆序弹出 <code class="inl">POP {r8}…POP {r5}</code>。）</span></li>
+    </ul>
+  </div>
+
+  <h3>1.4　汇编器铁证（机器码）</h3>
+  <table>
+    <thead><tr><th class="mono">源码写法</th><th class="mono">机器码</th><th class="mono">反汇编结果</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">PUSH {r1,r4,r3,r2}</td><td class="mono">B41E</td><td class="mono">PUSH {r1-r4}</td><td>16 位编码，书写顺序被忽略 → 升序！</td></tr>
+      <tr><td class="mono">POP {r5-r7,r8}</td><td class="mono">E8BD 01E0</td><td class="mono">POP {r5-r8}</td><td>因含 r8，必须用 32 位 Thumb-2 编码</td></tr>
+    </tbody>
+  </table>
+
+  <h3>1.5　Keil 实测</h3>
+  <figure>
+    <img src="shots/task7_registers.jpg" alt="Task 7 Keil 单步后的 Registers 窗口">
+    <figcaption>Keil 实测：单步执行完 <code class="inl">PUSH</code> 与 <code class="inl">POP</code> 后，Registers 窗口显示
+      <b>R5=0x00000001、R6=0x00000002、R7=0x00000003、R8=0x00000004</b>；
+      SP 回到 <b>0x20008000</b>；Disassembly 里可见 <code class="inl">E8BD01E0 POP {r5-r8}</code>。</figcaption>
+  </figure>
+  <div class="ans"><h4>编译结果</h4><ul><li><code class="inl">"..\build\Task7.axf" - 0 Error(s), 0 Warning(s).</code></li></ul></div>
+
+  <div class="warn"><h4>易错点</h4>
+    <ul class="tight">
+      <li>以为 <code class="inl">PUSH {r1,r4,r3,r2}</code> 会按书写顺序压栈 —— 实际按<b>编号升序</b>。</li>
+      <li>含 <b>r8</b> 的 PUSH/POP 需要 32 位编码；若 Keil 的 <code class="inl">Options → Asm → Thumb Mode</code> 被勾上（等于给 armasm 传 <code class="inl">--16</code>），会报
+        <code class="inl">A1237E: Invalid register or register combination</code>。本工程特意<b>不勾</b>该选项。</li>
+      <li>R0–R3、R12 是"调用者保存"，R4–R11 是"被调用者保存"——函数里用到 R4 及以上必须 PUSH/POP 保护。</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2 class="sec">二、Task 8：PC / SP / LR</h2>
+<div class="card">
+  <div class="req"><b>题目：</b>在 Debug 模式下检查 <b>SP 指针为 0x2000600</b>；在 0x2000600 写 0x11111111、0x2000604 写 0x22222222；
+  <b>观察 PC、SP、LR</b>。</div>
+
+  <h3>2.1　三个寄存器是什么</h3>
+  <table>
+    <thead><tr><th class="mono">寄存器</th><th>名字</th><th>作用</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">PC (R15)</td><td>Program Counter</td><td>指向<b>下一条将要执行</b>的指令。单步时逐条前进；取指对 PC 有 +4 的隐含偏移。</td></tr>
+      <tr><td class="mono">SP (R13)</td><td>Stack Pointer</td><td>栈指针，指向当前栈顶。Cortex-M 复位后由向量表<b>第 0 个字</b>装载（MSP）。</td></tr>
+      <tr><td class="mono">LR (R14)</td><td>Link Register</td><td>保存子程序<b>返回地址</b>。<code class="inl">BL</code> 会自动写入 LR；<code class="inl">BX lr</code> / <code class="inl">MOV pc,lr</code> 用它返回。</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.2　复位与向量表</h3>
+  <p>Cortex-M 复位时硬件自动做两件事：从地址 <b>0x00000000</b> 读第 1 个字装进 <b>SP</b>，读第 2 个字装进 <b>PC</b>。所以工程开头要放一张最小向量表：</p>
+<pre>        AREA    RESET, DATA, READONLY
+        EXPORT  __Vectors
+__Vectors
+        DCD     0x2000600        <span class="c">; 向量表[0] → 复位后装入 SP</span>
+        DCD     Reset_Handler    <span class="c">; 向量表[1] → 复位后装入 PC</span></pre>
+
+  <h3>2.3　代码与逐步轨迹</h3>
+<pre>Reset_Handler
+        BL      myfunc           <span class="c">; 0x08：调用子程序，LR ← 返回地址</span>
+here    B       here             <span class="c">; 0x0C：死循环标签</span>
+myfunc
+        MOV     r0, #0           <span class="c">; 0x0E：子程序体</span>
+        BX      lr               <span class="c">; 0x12：按 LR 返回</span></pre>
+  <table>
+    <thead><tr><th class="mono">时刻</th><th class="mono">PC</th><th class="mono">SP</th><th class="mono">LR</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">复位完成</td><td class="mono">0x00000008</td><td class="mono">0x2000600</td><td class="mono">0xFFFFFFFF</td><td>SP 来自向量表[0]；LR 复位值是 0xFFFFFFFF</td></tr>
+      <tr><td class="mono">执行 BL myfunc 后</td><td class="mono">0x0000000E</td><td class="mono">0x2000600</td><td class="mono"><b>0x0000000D</b></td><td>LR = 返回地址 = <code class="inl">here</code>(0x0C) 加上 Thumb 位 = 0x0D</td></tr>
+      <tr><td class="mono">执行 MOV r0,#0 后</td><td class="mono">0x00000012</td><td class="mono">0x2000600</td><td class="mono">0x0000000D</td><td>PC 顺序前进</td></tr>
+      <tr><td class="mono">执行 BX lr 后</td><td class="mono"><b>0x0000000C</b></td><td class="mono">0x2000600</td><td class="mono">0x0000000D</td><td>PC 跳回 <code class="inl">here</code> —— 这就是"子程序返回"</td></tr>
+      <tr><td class="mono">执行 B here 后</td><td class="mono">0x0000000C</td><td class="mono">0x2000600</td><td class="mono">0x0000000D</td><td>自循环，PC 不再变化</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.4　Keil 实测</h3>
+  <figure>
+    <img src="shots/task8_registers.png" alt="Task 8 Registers 窗口">
+    <figcaption>Keil 实测（<code class="inl">BX lr</code> 之后）：<b>R15 (PC) = 0x0000000C</b>（已跳回 <code class="inl">here</code>）、
+      <b>R14 (LR) = 0x0000000D</b>（返回地址）、<b>R13 (SP) = 0x02000600</b>（即 <b>0x2000600</b>，与课件要求一致）。</figcaption>
+  </figure>
+  <figure>
+    <img src="shots/task8_build.jpg" alt="Task 8 编译输出">
+    <figcaption>编译输出：<code class="inl">"..\build\Task8.axf" - 0 Error(s), 0 Warning(s).</code>
+      （状态栏显示的是切换 Simulator 之前的驱动名，可忽略。）</figcaption>
+  </figure>
+
+  <div class="ans"><h4>答案</h4>
+    <ul>
+      <li><b>SP = 0x2000600</b>（由向量表[0]装载，与课件"SP 会显示为 0x2000600"一致）。</li>
+      <li><b>PC</b>：复位后指向 <code class="inl">Reset_Handler</code>（本工程 0x08）；<code class="inl">BX lr</code> 之后回到 <code class="inl">here</code>（0x0C）。具体地址随编译布局而定，<b>必须在 Keil 的 Registers/Disassembly 窗口里读</b>。</li>
+      <li><b>LR</b>：复位值 <code class="inl">0xFFFFFFFF</code>；执行 <code class="inl">BL myfunc</code> 后变为<b>返回地址 0x0000000D</b>（= <code class="inl">here</code> 的 0x0C 加 Thumb 位）。</li>
+    </ul>
+  </div>
+
+  <div class="warn"><h4>两个必须知道的"坑"</h4>
+    <ul class="tight">
+      <li><b>地址 0x2000600 疑似少写了一个 0。</b>ARMCM4（以及 STM32F401）的 RAM 都是从 <b>0x20000000</b> 开始的，而 0x2000600 &lt; 0x20000000，<b>落在 RAM 之外</b>，模拟器/芯片都无处可写。课件里"在 0x2000600 写 0x11111111"这一步按字面是做不成的，推测原意是 <b>0x20000600</b>。SP 本身设成 0x2000600 没问题（它只是个数，不做访问）。</li>
+      <li><b>演示时要把调试器切成 Simulator。</b>本工程的调试驱动默认为 <code class="inl">ULINK2/ME</code>，未接硬件时会弹
+        <code class="inl">No ULINK2/ME Device found</code>；需到 <code class="inl">Project → Options for Target → Debug</code> 选 <b>Use Simulator</b>。</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2 class="sec">三、两份 Keil 操作演示（照做即可）</h2>
+<div class="card">
+  <h3>3.1　Task 7</h3>
+  <ul class="tight">
+    <li>打开工程 <span class="kv">keil_demo\Task7\Task7.uvprojx</span>（器件 ARMCM4）。</li>
+    <li>按 <b>F7</b> 编译 → Build Output 显示 <code class="inl">0 Error(s), 0 Warning(s)</code>。</li>
+    <li>到 <code class="inl">Options for Target → Debug</code> 选 <b>Use Simulator</b>（若无 ULINK 硬件）。</li>
+    <li>按 <b>Ctrl+F5</b> 进入调试；打开 <code class="inl">View → Registers Window</code>。</li>
+    <li>连按 <b>F10</b>（Step Over）共 6 次，执行完 MOV×4、PUSH、POP。</li>
+    <li>在 Registers 窗口读出 <b>R5=1、R6=2、R7=3、R8=4</b>，并说明"PUSH 按升序压栈、POP 按升序弹出"。</li>
+  </ul>
+  <h3>3.2　Task 8</h3>
+  <ul class="tight">
+    <li>打开工程 <span class="kv">keil_demo\Task8\Task8.uvprojx</span>，F7 编译（同样 0/0）。</li>
+    <li>Debug 选 <b>Use Simulator</b> → <b>Ctrl+F5</b> 进入调试。</li>
+    <li>读 <b>SP</b>：应为 <b>0x2000600</b>（来自向量表[0]）。</li>
+    <li>读 <b>PC</b>：指向 <code class="inl">Reset_Handler</code>（在 Disassembly 窗口对照地址）。<b>LR</b> 此时是 <code class="inl">0xFFFFFFFF</code>。</li>
+    <li>按 <b>F10</b> 执行 <code class="inl">BL myfunc</code> → 指出 <b>LR 变成 0x0000000D</b>（= 返回地址）。</li>
+    <li>再按 2 次 F10（MOV → BX lr）→ 指出 <b>PC 跳回</b> <code class="inl">here</code>，这就是"用 LR 返回"。</li>
+  </ul>
+  <div class="tip">课件要求的"0x2000600 写 0x11111111 / 0x2000604 写 0x22222222"一步，因地址落在 RAM 之外无法执行；演示时可说明这是课件笔误，或改用 <b>0x20000600 / 0x20000604</b>（在 RAM 内）演示写内存。</div>
+</div>
+
+<footer>
+  Block 1.5 Coding Day · Task 7 &amp; Task 8 解析　｜　数值均来自 Keil MDK 5.36 实机演示<br>
+  配套工程：<span class="kv">keil_demo\Task7</span> / <span class="kv">keil_demo\Task8</span>　｜　截图：<span class="kv">shots\</span>
+</footer>
+
+</div>
+</body>
+</html>

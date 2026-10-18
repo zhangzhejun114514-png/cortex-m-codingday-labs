@@ -1,0 +1,6 @@
+--cpu=Cortex-M4 --fpu=SoftVFP
+"..\build\task7_demo.o"
+--library_type=microlib --diag_suppress 6314 --scatter "..\build\Task7.sct"
+--entry=Reset_Handler --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "..\build\Task7.map" -o ..\build\Task7.axf

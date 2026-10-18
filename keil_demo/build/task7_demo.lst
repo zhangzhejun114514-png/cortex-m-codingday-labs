@@ -1,0 +1,103 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; ======================================================
+                       ===============
+    2 00000000         ; Block 1.5 Coding Day  Task 7  —— 演示用工程�
+                       �件 (Code 1)
+    3 00000000         ; 说明 : 在交付版 Task7_Code1.s 的任务代码前
+                       ，加了一张最小向量表(RESET 段)，
+    4 00000000         ;        让 Keil 模拟器复位时能取到正确的 �
+                       ��始 SP 与 复位向量。
+    5 00000000         ;        下方任务代码与交付版 Task7_Code1.s �
+                       �全一致。
+    6 00000000         ; 预期 : r5=1  r6=2  r7=3  r8=4
+    7 00000000         ; ======================================================
+                       ===============
+    8 00000000                 AREA             RESET, DATA, READONLY
+    9 00000000                 EXPORT           __Vectors
+   10 00000000         __Vectors
+   11 00000000 20008000        DCD              0x20008000  ; 初始栈顶(MSP)
+                                                            
+   12 00000004 00000000        DCD              Reset_Handler ; 复位向量
+   13 00000008         
+   14 00000008                 AREA             |.text|, CODE, READONLY
+   15 00000000                 EXPORT           Reset_Handler
+   16 00000000         Reset_Handler
+   17 00000000 F04F 0101       MOV              r1, #1
+   18 00000004 F04F 0202       MOV              r2, #2
+   19 00000008 F04F 0303       MOV              r3, #3
+   20 0000000C F04F 0404       MOV              r4, #4
+   21 00000010 B41E            PUSH             {r1, r4, r3, r2} ; 实际压栈
+                                                            顺序: r1 r2 r3 r4
+                                                            
+   22 00000012 E8BD 01E0       POP              {r5-r7, r8} ; r5=1 r6=2 r7=3 r8
+                                                            =4
+   23 00000016 E7FE    loop    B                loop
+   24 00000018                 ALIGN
+   25 00000018                 END
+Command Line: --debug --no_warn --xref --diag_suppress=9931 --cpu=Cortex-M4 --a
+pcs=interwork --depend=..\build\task7_demo.d -o..\build\task7_demo.o -IC:\Users
+\17129\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\Device\ARM\ARMCM4\Include --pred
+efine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VE
+RSION SETA 536" --predefine="ARMCM4 SETA 1" --list=..\build\task7_demo.lst ..\s
+rc\Task7_demo.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 8 in file ..\src\Task7_demo.s
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 10 in file ..\src\Task7_demo.s
+   Uses
+      At line 9 in file ..\src\Task7_demo.s
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 14 in file ..\src\Task7_demo.s
+   Uses
+      None
+Comment: .text unused
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 16 in file ..\src\Task7_demo.s
+   Uses
+      At line 12 in file ..\src\Task7_demo.s
+      At line 15 in file ..\src\Task7_demo.s
+
+loop 00000016
+
+Symbol: loop
+   Definitions
+      At line 23 in file ..\src\Task7_demo.s
+   Uses
+      At line 23 in file ..\src\Task7_demo.s
+Comment: loop used once
+3 symbols
+339 symbols in table

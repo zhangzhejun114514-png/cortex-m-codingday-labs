@@ -1,0 +1,3 @@
+Dependencies for Project 'Task7', Target 'Simulator': (DO NOT MODIFY !)
+CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
+F (..\src\Task7_demo.s)(0x6AD1CC2E)(--cpu Cortex-M4 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1" --nowarn-IC:\Users\17129\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\Device\ARM\ARMCM4\Include--pd "__UVISION_VERSION SETA 536" --pd "ARMCM4 SETA 1"--list ..\build\task7_demo.lst --xref -o ..\build\task7_demo.o --depend ..\build\task7_demo.d)
